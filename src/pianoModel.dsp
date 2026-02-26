@@ -56,13 +56,13 @@ with {
     N = freq2samples(f);
     delayLine = de.fdelay(4096, N); 
     
-    loss = 0.9985; // simplifier pour réduire le loss dans les BF
+    loss = 0.9985;
     w = 0.5 * (100.0 / f) : min(0.5);
 
     filter(x) = (x * (1.0 - w) + x' * w) * (loss * damper(gate));
 };
 
-freq2samples(hz) = ma.SR / hz - 1.0; // X justif ?
+freq2samples(hz) = ma.SR / hz - 1.0;
 
 soundboard(hz, input) = input <: (
       fi.resonlp(400 + hz, 1.2, 0.2)
