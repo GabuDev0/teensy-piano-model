@@ -2,7 +2,7 @@
 #include "pianoModel.h"
 #include "math.h"
 
-#define NUM_VOICES 3
+#define NUM_VOICES 8
 
 int current_voice = 0;
 int voices[NUM_VOICES]; // voices[0] = midi_note
@@ -21,6 +21,20 @@ void setup() {
   // *** Teensy usb midi set handle functions ***
   usbMIDI.setHandleNoteOn(onNoteON);
   usbMIDI.setHandleNoteOff(onNoteOFF);
+  usbMIDI.setHandleControlChange(onControleChange);
+}
+void onControleChange(byte channel, byte control, byte value) {
+  Serial.print("Channel: ");
+  Serial.print(channel);
+  Serial.print(" Control ");
+  Serial.print(control);
+  Serial.print(" Value: ");
+  Serial.println(value);
+
+  // The CC70 knob
+  if (control == 70) {
+    myDsp.setParamValue("brightness", value/127.0);
+  }
 }
 
 void onNoteON(byte channel, byte note, byte velocity) {
